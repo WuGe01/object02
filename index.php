@@ -17,6 +17,7 @@ $sumVisited=$total->q("select sum(`total`) from `total`")[0][0];
 </head>
 
 <body>
+
 	<div id="alerr"
 		style="background:rgba(51,51,51,0.8); color:#FFF; min-height:100px; width:300px; position:fixed; display:none; z-index:9999; overflow:auto;">
 		<pre id="ssaa"></pre>
@@ -44,7 +45,26 @@ $sumVisited=$total->q("select sum(`total`) from `total`")[0][0];
 
 					<marquee style="width:80%">請民眾踴躍投稿電子報，請電子報成為大家相互交流、分享的園地!詳見最新文章</marquee>
 					<span style="width:18%; display:inline-block;">
+					<?php
+					if(!empty($_SESSION['login'])){
+						if($_SESSION['login']=='admin'){
+					?>
+						歡迎，<?=$_SESSION['login'];?><br>
+						<button onclick="location.replace('admin.php')">管理</button>
+						<button onclick="location.replace('api/logout.php')">登出</button>
+					<?php
+						}else{
+							?>
+							歡迎，<?=$_SESSION['login'];?><br>
+							<button onclick="location.replace('api/logout.php')">登出</button>
+							<?php
+					}}
+					else{
+					?>				
 						<a href="?do=login">會員登入</a>
+					<?php
+					}
+					?>
 					</span>
 					<div class="">
 						<?php
