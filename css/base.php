@@ -2,87 +2,89 @@
 date_default_timezone_set("Asia/Taipei");
 session_start();
 class DB{
-    private $dns="mysql::host:localhost;charset=utf8;dbname=db66";
+    private $dns="mysql::host=localhost;charset=utf8;dbname=db66";
     private $table;
     private $pdo;
     public function __construct($table){
         $this->table=$table;
         $this->pdo=new PDO($this->dns,'root','');
     }
-    public function all(...$a){
+    public function all(...$arg){
         $sql="select * from $this->table ";
-        if(!empty($a[0]) && is_array($a[0])){
+        if(!empty($arg[0]) && is_array($arg[0])){
             $tmp=[];
-            foreach ($a as $key => $value) {
-                $tmp[]="`".$key."` = '".$value."'";
+            foreach ($arg[0] as $key => $value) {
+                $tmp[]=sprintf("`%s`='%s'",$key,$value);
             }
-            $sql=$sql. " where " . join(" && ",$tmp);
+            $sql=$sql." where " . join(" && ",$tmp);
         }
-        if(!empty($a[1])){
-            $sql=$sql . $a[1];
+        if(!empty($arg[1])){
+            $sql=$sql . $arg[1];    
         }
         return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function nums(...$a){
+    public function nums(...$arg){
         $sql="select count(*) from $this->table ";
-        if(!empty($a) && is_array($a[0])){
+        if(!empty($arg[0]) && is_array($arg[0])){
             $tmp=[];
-            foreach ($a as $key => $value) {
-                $tmp[]="`".$key."` = '".$value."'";
-            }
-            $sql=$sql. " where ".join(" && " ,$tmp);
-        }else{
-            $sql=$sql . $a[0];
-        }
-        if(!empty($a[1])){
-            $sql=$sql . $a[1];
-        }
-        return $this->pdo->query($sql)->fetchColumn();
-    }
-    public function find($a){
-        $sql="select * from $this->table ";
-        if(is_array($a)){
-            $tmp=[];
-            foreach ($a as $key => $value) {
+            foreach ($arg[0] as $key => $value) {
                 $tmp[]=sprintf("`%s`='%s'",$key,$value);
             }
             $sql=$sql." where " . join(" && ",$tmp);
         }else{
-            $sql=$sql . " where `id`='$a'";
+            $sql=$sql . $arg[0];
+        }
+        if(!empty($arg[1])){
+            $sql=$sql . $arg[1];    
+        }
+        return $this->pdo->query($sql)->fetchColumn();
+    }
+    public function find($arg){
+        $sql="select * from $this->table ";
+        if(is_array($arg)){
+            $tmp=[];
+            foreach ($arg as $key => $value) {
+                $tmp[]=sprintf("`%s`='%s'",$key,$value);
+            }
+            $sql=$sql." where " . join(" && ",$tmp);
+        }else{
+            $sql=$sql . " where `id`='$arg'";
         }
         return $this->pdo->query($sql)->fetch(PDO::FETCH_ASSOC);
     }
-    public function del($a){
-        $sql="delect from $this->table ";
-        if(is_array($a)){
+    public function del($arg){
+        $sql="delete  from $this->table ";
+        if(is_array($arg)){
             $tmp=[];
-            foreach ($a as $key => $value) {
-                $tmp="`".$key."`  =  '".$value."'";
+            foreach ($arg as $key => $value) {
+                $tmp[]=sprintf("`%s`='%s'",$key,$value);
             }
-            $sql=$sql . "where " . join(" && ",$tmp);
+            $sql=$sql." where " . join(" && ",$tmp);
         }else{
-            $sql=$sql . "where `id`='$a'";
+            $sql=$sql . " where `id`='$arg'";
         }
         return $this->pdo->exec($sql);
     }
     public function q($sql){
         return $this->pdo->query($sql)->fetchAll(PDO::FETCH_ASSOC);
     }
-    public function save($a){
-        if(!empty($a['id'])){
-            $tmp=[];
-            foreach ($a as $key => $value) {
-                $tmp[]="`$key` = '$value'";
+    public function save($arg){
+        if(!empty($arg['id'])){
+            foreach($arg as $key => $value){
+                if($key!='id'){
+                    $tmp[]=sprintf("`%s`='%s'",$key,$value);
+                }
             }
-            $sql="update $this->table set ".join(",",$tmp)." where `id` = '".$a['id']."'";
+            $sql="update $this->table set ".join(",",$tmp)." where `id`='".$arg['id']."'";
         }else{
-            $sql="insert into $this->table (`".join("`,`",array_keys($a))."`) values('".join("','",$a)."')";
+
+            $sql="insert into $this->table (`".join("`,`",array_keys($arg))."`) values('".join("','",$arg)."')";
         }
         return $this->pdo->exec($sql);
     }
 }
-function to($u){
-    header("location:".$u);
+function to($url){
+    header("location:".$url);
 }
 
 $total=new DB('total');
