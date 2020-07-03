@@ -16,8 +16,6 @@
             <td width="10%"></td>
         </tr>
 <?php
-    $news=new DB("news");
-    $log=new DB("log");
     $rows=$news->all();
     $total=$news->count();
     $div=5;
@@ -41,8 +39,8 @@
                 if(!empty($_SESSION['login'])){
                   
                   $chk=$log->count(['user'=>$_SESSION['login'],'news'=>$r['id']]);
-                  if($chk==0) echo "<a href=''>讚</a>";
-                  else echo "<a href=''>收回讚</a>";
+                  if($chk==0) echo "<a href='#' id='good".$r['id']."' onclick='god(".$r['id'].",1,&#39;".$_SESSION['login']."&#39;)'>讚</a>";
+                  else echo "<a href='#' id='good".$r['id']."' onclick='god(".$r['id'].",2,&#39;".$_SESSION['login']."&#39;)'>收回讚</a>";
                 }
 
 ?>
@@ -67,6 +65,7 @@
 ?>
 </fieldset>
 <script>
+
     $(".title").on("click",function(){
         // console.log($(this).next().children('abbr').hide)
         $(this).next().children('.abbr').toggle();

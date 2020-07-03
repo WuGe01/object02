@@ -175,3 +175,5 @@ if(empty($chk) && empty($_SESSION['visited'])){
     }
     $_SESSION['visited']=1;
 } */
+$news=new DB("news");
+$log=new DB("log");
