@@ -28,13 +28,13 @@
     
 
 ?>
-        <tr>
-            <td class="title"><?=$r['title'];?></td>
-            <td>
-                <div class="abbr"><?=mb_substr($r['text'],0,20,'utf8');?>...</div>
-                <div class="all"><?=nl2br($r['text']);?></div>
-            </td>
-            <td>
+<tr>
+    <td class="title"><?=$r['title'];?></td>
+    <td>
+        <div class="abbr"><?=mb_substr($r['text'],0,20,'utf8');?>...</div>
+        <div class="all"><?=nl2br($r['text']);?></div>
+    </td>
+    <td>
 <?php
                 if(!empty($_SESSION['login'])){
                   
@@ -46,8 +46,8 @@
 ?>
 
   
-            </td>
-       </tr>
+     </td>
+</tr>
 <?php
     }
 ?>
@@ -65,11 +65,8 @@
 ?>
 </fieldset>
 <script>
-
     $(".title").on("click",function(){
-        // console.log($(this).next().children('abbr').hide)
         $(this).next().children('.abbr').toggle();
-        $(this).next().children('.all').toggle();
-        
+        $(this).next().children('.all').toggle();       
     })
 </script>
