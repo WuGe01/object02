@@ -5,20 +5,26 @@
     padding: 5px 10px;
     margin-left: -5px;
     border: 1px solid #CCC;
+    background-color: #CCC;
 }
 .post{
     display: none;
     padding: 5px 10px;
     margin-left: -5px;
     border: 1px solid #CCC;
+    margin-top:-2px;
 }
 .active{
     display: block !important ;
 }
+.typeClick{
+    background-color: white !important;
+    border-bottom: 3px solid white;
+}
 </style>
 
 <div style="margin:auto;width: 95%;padding: 5px;">
-<div class="type" data-id="1">健康新知</div>
+<div class="type typeClick" data-id="1">健康新知</div>
 <div class="type" data-id="2">菸害防治</div>
 <div class="type" data-id="3">癌症防治</div>
 <div class="type" data-id="4">慢性病防治</div>
@@ -121,6 +127,8 @@ $(".type").on("click",function(){
     let p=$(this).data("id");
     $(".post").removeClass("active");
     $("#p"+p).addClass("active");
+    $(".type").removeClass("typeClick");
+    $(this).addClass("typeClick");
 })
 
 </script>
