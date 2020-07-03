@@ -1,3 +1,12 @@
+<style>
+    .all{
+        display: none;
+    }
+    .title{
+        cursor:pointer;
+        background-color:#EEE;
+    }
+</style>
 <fieldset>
     <legend>目前位置：首頁 > 最新文章區</legend>
     <table>
@@ -7,23 +16,39 @@
             <td width="10%"></td>
         </tr>
 <?php
-    $db=new DB('news');
-    $rows=$db->all();
-    $total=$db->count();
+    $news=new DB("news");
+    $log=new DB("log");
+    $rows=$news->all();
+    $total=$news->count();
     $div=5;
     $pages=ceil($total/$div);
     $now=(!empty($_GET['p']))?$_GET['p']:1;
     $start=($now-1)*$div;
-    $rows=$db->all([]," limit $start,$div");
+    $rows=$news->all([]," limit $start,$div");
 
     foreach ($rows as $r ) {
     
 
 ?>
         <tr>
-            <td><?=$r['title'];?></td>
-            <td><?=mb_substr($r['text'],0,20,'utf8');?>...</td>
-            <td></td>
+            <td class="title"><?=$r['title'];?></td>
+            <td>
+                <div class="abbr"><?=mb_substr($r['text'],0,20,'utf8');?>...</div>
+                <div class="all"><?=nl2br($r['text']);?></div>
+            </td>
+            <td>
+<?php
+                if(!empty($_SESSION['login'])){
+                  
+                  $chk=$log->count(['user'=>$_SESSION['login'],'news'=>$r['id']]);
+                  if($chk==0) echo "<a href=''>讚</a>";
+                  else echo "<a href=''>收回讚</a>";
+                }
+
+?>
+
+  
+            </td>
        </tr>
 <?php
     }
@@ -41,3 +66,11 @@
     if(($now+1)<= $pages) echo "<a href='?do=news&p=".($now+1)."'>></a>";
 ?>
 </fieldset>
+<script>
+    $(".title").on("click",function(){
+        // console.log($(this).next().children('abbr').hide)
+        $(this).next().children('.abbr').toggle();
+        $(this).next().children('.all').toggle();
+        
+    })
+</script>
