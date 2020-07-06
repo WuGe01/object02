@@ -22,11 +22,9 @@
     $pages=ceil($total/$div);
     $now=(!empty($_GET['p']))?$_GET['p']:1;
     $start=($now-1)*$div;
-    $rows=$news->all([]," limit $start,$div");
-
-    foreach ($rows as $r ) {
+    $rows=$news->all(["sh"=>1]," limit $start,$div");
+    foreach ($rows as $r ) if($r['sh']==1){
     
-
 ?>
 <tr>
     <td class="title"><?=$r['title'];?></td>
@@ -36,17 +34,13 @@
     </td>
     <td>
 <?php
-                if(!empty($_SESSION['login'])){
-                  
-                  $chk=$log->count(['user'=>$_SESSION['login'],'news'=>$r['id']]);
-                  if($chk==0) echo "<a href='#' id='good".$r['id']."' onclick='god(".$r['id'].",1,&#39;".$_SESSION['login']."&#39;)'>讚</a>";
-                  else echo "<a href='#' id='good".$r['id']."' onclick='god(".$r['id'].",2,&#39;".$_SESSION['login']."&#39;)'>收回讚</a>";
-                }
-
+if(!empty($_SESSION['login'])){               
+    $chk=$log->count(['user'=>$_SESSION['login'],'news'=>$r['id']]);
+    if($chk==0) echo "<a href='#' id='good".$r['id']."' onclick='god(".$r['id'].",1,&#39;".$_SESSION['login']."&#39;)'>讚</a>";
+    else echo "<a href='#' id='good".$r['id']."' onclick='god(".$r['id'].",2,&#39;".$_SESSION['login']."&#39;)'>收回讚</a>";
+}
 ?>
-
-  
-     </td>
+</td>
 </tr>
 <?php
     }

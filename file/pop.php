@@ -29,7 +29,7 @@
     $pages=ceil($total/$div);
     $now=(!empty($_GET['p']))?$_GET['p']:1;
     $start=($now-1)*$div;
-    $rows=$news->all([]," order by good desc limit $start,$div");
+    $rows=$news->all(["sh"=>1]," order by good desc limit $start,$div");
     foreach ($rows as $r ) {
     
 
